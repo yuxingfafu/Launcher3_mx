@@ -662,7 +662,7 @@ public final class Utilities {
     public static boolean isRtl(Resources res) {
 //        return ATLEAST_JB_MR1 &&
 //                (res.getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
-        return true;
+        return false;
     }
 
     public static void assertWorkerThread() {

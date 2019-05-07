@@ -131,6 +131,8 @@ public class ItemInfo {
         LauncherModel.checkItemInfo(this);
     }
 
+
+    public boolean neadReoder;
     public void copyFrom(ItemInfo info) {
         id = info.id;
         cellX = info.cellX;

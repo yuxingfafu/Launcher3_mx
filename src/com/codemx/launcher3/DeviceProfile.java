@@ -409,6 +409,7 @@ public class DeviceProfile {
             targets.getLayoutParams().width = searchBarSpaceWidthPx;
         }
         searchBar.setLayoutParams(lp);
+        searchBar.setVisibility(View.GONE);
 
         // Layout the workspace
         PagedView workspace = (PagedView) launcher.findViewById(R.id.workspace);
@@ -447,7 +448,7 @@ public class DeviceProfile {
                     2 * edgeMarginPx, 0);
         }
         hotseat.setLayoutParams(lp);
-
+        hotseat.setVisibility(View.GONE);
         // Layout the page indicators
         View pageIndicator = launcher.findViewById(R.id.page_indicator);
         if (pageIndicator != null) {

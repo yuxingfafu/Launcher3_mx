@@ -46,8 +46,8 @@ public class PageIndicator extends LinearLayout {
         int inactiveId;
 
         public PageMarkerResources() {
-            activeId = R.drawable.ic_pageindicator_current;
-            inactiveId = R.drawable.ic_pageindicator_default;
+            activeId = R.drawable.dot_on__bocom;
+            inactiveId = R.drawable.dot__bocom;
         }
 
         public PageMarkerResources(int aId, int iaId) {

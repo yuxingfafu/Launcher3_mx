@@ -940,7 +940,7 @@ public class DragLayer extends InsettableFrameLayout {
 
         // We want to draw the page hints above the workspace, but below the drag view.
         if (child instanceof Workspace) {
-            drawPageHints(canvas);
+//            drawPageHints(canvas);
         }
         return ret;
     }

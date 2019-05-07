@@ -29,23 +29,23 @@
         android:label="@string/permlab_install_shortcut"
         android:description="@string/permdesc_install_shortcut" />
     <permission
-        android:name="com.codemx.launcher3.permission.READ_SETTINGS"
+        android:name="com.codemx.launcher4.permission.READ_SETTINGS"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="normal"
         android:label="@string/permlab_read_settings"
         android:description="@string/permdesc_read_settings"/>
     <permission
-        android:name="com.codemx.launcher3.permission.WRITE_SETTINGS"
+        android:name="com.codemx.launcher4.permission.WRITE_SETTINGS"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="signatureOrSystem"
         android:label="@string/permlab_write_settings"
         android:description="@string/permdesc_write_settings"/>
     <permission
-        android:name="com.codemx.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS"
+        android:name="com.codemx.launcher4.permission.RECEIVE_LAUNCH_BROADCASTS"
         android:protectionLevel="signature"
         />
     <permission
-        android:name="com.codemx.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST"
+        android:name="com.codemx.launcher4.permission.RECEIVE_FIRST_LOAD_BROADCAST"
         android:protectionLevel="signatureOrSystem" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -58,10 +58,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.codemx.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.codemx.launcher.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="com.codemx.launcher3.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.codemx.launcher3.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="com.codemx.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS" />
-    <uses-permission android:name="com.codemx.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
+    <uses-permission android:name="com.codemx.launcher4.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.codemx.launcher4.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.codemx.launcher4.permission.RECEIVE_LAUNCH_BROADCASTS" />
+    <uses-permission android:name="com.codemx.launcher4.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
 
     <application
         android:allowBackup="@bool/enable_backup"
@@ -154,7 +154,7 @@
         </activity>
 
         <activity
-            android:name="com.codemx.launcher3.SettingsActivity"
+            android:name="com.codemx.launcher4.settingsActivity"
             android:label="@string/settings_button_text"
             android:autoRemoveFromRecents="true"
             android:process=":settings_process">
@@ -213,10 +213,10 @@
         <!-- The settings provider contains Home's data, like the workspace favorites -->
         <provider
             android:name="com.codemx.launcher3.LauncherProvider"
-            android:authorities="com.codemx.launcher3.settings"
+            android:authorities="com.codemx.launcher4.settings"
             android:exported="true"
-            android:writePermission="com.codemx.launcher3.permission.WRITE_SETTINGS"
-            android:readPermission="com.codemx.launcher3.permission.READ_SETTINGS" />
+            android:writePermission="com.codemx.launcher4.permission.WRITE_SETTINGS"
+            android:readPermission="com.codemx.launcher4.permission.READ_SETTINGS" />
 
         <meta-data android:name="android.nfc.disable_beam_default"
                        android:value="true" />

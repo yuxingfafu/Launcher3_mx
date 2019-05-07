@@ -56,6 +56,9 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -66,6 +69,7 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -136,7 +140,7 @@ public class Launcher extends Activity
 
     static final boolean PROFILE_STARTUP = false;
     static final boolean DEBUG_WIDGETS = true;
-    static final boolean DEBUG_STRICT_MODE = false;
+    static final boolean DEBUG_STRICT_MODE = true;
     static final boolean DEBUG_RESUME_TIME = false;
     static final boolean DEBUG_DUMP_LOG = false;
 
@@ -211,6 +215,8 @@ public class Launcher extends Activity
     private static final String QSB_WIDGET_PROVIDER = "qsb_widget_provider";
 
     public static final String USER_HAS_MIGRATED = "launcher.user_migrated_from_old_data";
+
+
 
     /**
      * The different states that Launcher can be in.
@@ -567,12 +573,12 @@ public class Launcher extends Activity
             }
         }
 
-        if (shouldShowIntroScreen()) {
-            showIntroScreen();
-        } else {
-            showFirstRunActivity();
-            showFirstRunClings();
-        }
+//        if (shouldShowIntroScreen()) {
+//            showIntroScreen();
+//        } else {
+//            showFirstRunActivity();
+////            showFirstRunClings();
+//        }
     }
 
     @Override
@@ -3237,7 +3243,7 @@ public class Launcher extends Activity
         if (v instanceof Workspace) {
             if (!mWorkspace.isInOverviewMode()) {
                 if (!mWorkspace.isTouchActive()) {
-                    showOverviewMode(true);
+//                    showOverviewMode(true);
                     mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
                             HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                     return true;
@@ -3269,7 +3275,7 @@ public class Launcher extends Activity
                 if (mWorkspace.isInOverviewMode()) {
                     mWorkspace.startReordering(v);
                 } else {
-                    showOverviewMode(true);
+//                    showOverviewMode(true);
                 }
             } else {
                 final boolean isAllAppsButton = inHotseat && isAllAppsButtonRank(

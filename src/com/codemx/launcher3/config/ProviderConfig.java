@@ -18,5 +18,5 @@ package com.codemx.launcher3.config;
 
 public class ProviderConfig {
 
-    public static final String AUTHORITY = "com.codemx.launcher3.settings".intern();
+    public static final String AUTHORITY = "com.codemx.launcher4.settings";
 }

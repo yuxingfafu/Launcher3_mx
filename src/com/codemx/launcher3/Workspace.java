@@ -702,7 +702,7 @@ public class Workspace extends PagedView
             return;
         }
         if (!mWorkspaceScreens.containsKey(EXTRA_EMPTY_SCREEN_ID)) {
-            insertNewWorkspaceScreen(EXTRA_EMPTY_SCREEN_ID);
+//            insertNewWorkspaceScreen(EXTRA_EMPTY_SCREEN_ID);
         }
     }
 
@@ -2661,6 +2661,7 @@ public class Workspace extends PagedView
                                         int[] targetCell, float distance, boolean external, DragView dragView,
                                         Runnable postAnimationRunnable) {
         if (distance > mMaxDistanceForFolderCreation) return false;
+
         View v = target.getChildAt(targetCell[0], targetCell[1]);
 
         boolean hasntMoved = false;
@@ -2782,10 +2783,10 @@ public class Workspace extends PagedView
 
                 // If the item being dropped is a shortcut and the nearest drop
                 // cell also contains a shortcut, then create a folder with the two shortcuts.
-                if (!mInScrollArea && createUserFolderIfNecessary(cell, container,
-                        dropTargetLayout, mTargetCell, distance, false, d.dragView, null)) {
-                    return;
-                }
+//                if (!mInScrollArea && createUserFolderIfNecessary(cell, container,
+//                        dropTargetLayout, mTargetCell, distance, false, d.dragView, null)) {
+//                    return;
+//                }
 
                 if (addToExistingFolderIfNecessary(cell, dropTargetLayout, mTargetCell,
                         distance, d, false)) {
@@ -3296,6 +3297,7 @@ public class Workspace extends PagedView
             }
             return;
         }
+        System.out.println("yuxing---->"+d.x+","+d.y+","+item.toString());
 
         // Ensure that we have proper spans for the item that we are dropping
         if (item.spanX < 0 || item.spanY < 0) throw new RuntimeException("Improper spans found");
@@ -3340,7 +3342,6 @@ public class Workspace extends PagedView
                 setCurrentDragOverlappingLayout(layout);
             }
         }
-
         // Handle the drag over
         if (mDragTargetLayout != null) {
             // We want the point to be mapped to the dragTarget.
@@ -3382,6 +3383,7 @@ public class Workspace extends PagedView
                     item.spanY, child, mTargetCell);
 
             if (!nearestDropOccupied) {
+                System.out.println("yuxing4---->");
                 mDragTargetLayout.visualizeDropLocation(child, mDragOutline,
                         (int) mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1],
                         mTargetCell[0], mTargetCell[1], item.spanX, item.spanY, false,
@@ -3389,6 +3391,7 @@ public class Workspace extends PagedView
             } else if ((mDragMode == DRAG_MODE_NONE || mDragMode == DRAG_MODE_REORDER)
                     && !mReorderAlarm.alarmPending() && (mLastReorderX != reorderX ||
                     mLastReorderY != reorderY)) {
+                System.out.println("yuxing3---->");
 
                 int[] resultSpan = new int[2];
                 mDragTargetLayout.performReorder((int) mDragViewVisualCenter[0],
@@ -3410,6 +3413,8 @@ public class Workspace extends PagedView
                 }
             }
         }
+        System.out.println("yuxing2---->"+ mTargetCell[0]+","+ mTargetCell[1]);
+
     }
 
     /**
@@ -4690,6 +4695,27 @@ public class Workspace extends PagedView
                     mLauncher.bindAppWidget(info);
                 }
             }
+        }
+    }
+
+    public void rearrangeApps(){
+        int count = getChildCount();
+        for (int i=0 ; i<count ; i++ ){
+            long screenID = getScreenIdForPageIndex(i);
+            if (screenID == CUSTOM_CONTENT_SCREEN_ID){
+                continue;
+            }
+
+            if (i == 1){
+                CellLayout cl = (CellLayout)getChildAt(i);
+                cl.setUseTempCoords(false);
+                cl.rearrangeHomePage();
+            } else {
+                CellLayout cl = (CellLayout)getChildAt(i);
+                cl.setUseTempCoords(false);
+                cl.rearrangeAppItems();
+            }
+
         }
     }
 }

@@ -101,21 +101,25 @@ public class InvariantDeviceProfile {
     InvariantDeviceProfile(String n, float w, float h, int r, int c, int fr, int fc, int maapc,
                            float is, float its, float hs, float his, int dlId) {
         // Ensure that we have an odd number of hotseat items (since we need to place all apps)
-        if (hs % 2 == 0) {
-            throw new RuntimeException("All Device Profiles must have an odd number of hotseat spaces");
-        }
+//        if (hs % 2 == 0) {
+//            throw new RuntimeException("All Device Profiles must have an odd number of hotseat spaces");
+//        }
 
         name = n;
         minWidthDps = w;
         minHeightDps = h;
         numRows = r;
         numColumns = c;
+
+        numRows = 3;
+        numColumns =3;
         numFolderRows = fr;
         numFolderColumns = fc;
         minAllAppsPredictionColumns = maapc;
         iconSize = is;
         iconTextSize = its;
         numHotseatIcons = hs;
+        numHotseatIcons=0;
         hotseatIconSize = his;
         defaultLayoutId = dlId;
     }
@@ -202,6 +206,10 @@ public class InvariantDeviceProfile {
                 727, 1207, 5, 6, 4, 5, 4, 76, 14.4f, 7, 64, R.xml.default_workspace_5x6));
         predefinedDeviceProfiles.add(new InvariantDeviceProfile("20-inch Tablet",
                 1527, 2527, 7, 7, 6, 6, 4, 100, 20, 7, 72, R.xml.default_workspace_4x4));
+
+        predefinedDeviceProfiles.add(new InvariantDeviceProfile("k9",
+                720, 1280, 3, 3, 6, 6, 4, 120, 20, 7, 72, R.xml.default_workspace_3x3));
+
         return predefinedDeviceProfiles;
     }
 

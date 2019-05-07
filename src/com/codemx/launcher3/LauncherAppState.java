@@ -57,6 +57,15 @@ public class LauncherAppState {
         return INSTANCE;
     }
 
+    /**
+     * 是否不显示所有app列表入口
+     * @return true 不显示  false 显示
+     */
+    public static boolean isDisableAllApps() {
+        // Returns false on non-dogfood builds.
+        return true;
+    }
+
     public static LauncherAppState getInstanceNoCreate() {
         return INSTANCE;
     }

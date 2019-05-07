@@ -86,6 +86,9 @@ public class Hotseat extends FrameLayout
     }
 
     public boolean isAllAppsButtonRank(int rank) {
+        if (LauncherAppState.isDisableAllApps()) {
+            return false;
+        }
         return rank == mAllAppsButtonRank;
     }
 
@@ -108,7 +111,11 @@ public class Hotseat extends FrameLayout
 
     void resetLayout() {
         mContent.removeAllViewsInLayout();
-
+        //添加 @{
+        if(LauncherAppState.isDisableAllApps()){
+            //添加
+            return;
+        }//@
         // Add the Apps button
         Context context = getContext();
 

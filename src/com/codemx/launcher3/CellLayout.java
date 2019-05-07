@@ -2226,7 +2226,7 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         mLauncher.getWorkspace().updateItemLocationsInDatabase(this);
     }
 
-    private void setUseTempCoords(boolean useTempCoords) {
+    public void setUseTempCoords(boolean useTempCoords) {
         int childCount = mShortcutsAndWidgets.getChildCount();
         for (int i = 0; i < childCount; i++) {
             LayoutParams lp = (LayoutParams) mShortcutsAndWidgets.getChildAt(i).getLayoutParams();
@@ -2234,7 +2234,7 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         }
     }
 
-    private ItemConfiguration findConfigurationNoShuffle(int pixelX, int pixelY, int minSpanX, int minSpanY,
+    public ItemConfiguration findConfigurationNoShuffle(int pixelX, int pixelY, int minSpanX, int minSpanY,
             int spanX, int spanY, View dragView, ItemConfiguration solution) {
         int[] result = new int[2];
         int[] resultSpan = new int[2];
@@ -2957,4 +2957,181 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
 
         return true;
     }
+
+
+    public void rearrangeAppItems(){
+        ArrayList<View> list = new ArrayList<View>();
+        ArrayList<String> blackList = new ArrayList<String>();
+        int neadReoderSize = getShortcutsAndWidgets().getChildCount();
+        for (int i=0; i<getShortcutsAndWidgets().getChildCount(); i++){
+            View tempView = getShortcutsAndWidgets().getChildAt(i);
+            list.add(tempView);
+            ItemInfo info = (ItemInfo) tempView.getTag();
+            if (info.spanX > 1 || info.spanY > 1){
+                neadReoderSize --;
+                for (int y=info.cellY; y<info.cellY+info.spanY; y++){
+                    for (int x=info.cellX; x<info.cellX+info.spanX; x++){
+                        int a = x + y*4;
+                        blackList.add(a + "");
+                        if (a < neadReoderSize) {
+                            neadReoderSize ++;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i=0; i<list.size(); i++){
+            ItemInfo info = (ItemInfo) list.get(i).getTag();
+            if (info.spanX > 1 || info.spanY > 1){
+            } else {
+                int oldPosition = info.cellX + info.cellY*4;
+                if (oldPosition < neadReoderSize ) {
+                    blackList.add(oldPosition + "");
+                    info.neadReoder = false;
+                } else {
+                    info.neadReoder = true;
+                }
+            }
+
+        }
+
+//    	getShortcutsAndWidgets().removeAllViews();
+        int position = 0;
+        int newX, newY, rank;
+        rank = 0;
+        InvariantDeviceProfile grid = LauncherAppState.getInstance().getInvariantDeviceProfile();
+
+        for (int i=0; i<list.size(); i++){
+            View v = list.get(i);
+            if (v != null){
+//        		CellLayout.LayoutParams lp = (CellLayout.LayoutParams) v.getLayoutParams();
+
+                newX = position % grid.numColumns;
+                newY = position / grid.numColumns;
+                ItemInfo info = (ItemInfo) v.getTag();
+
+                if (blackList != null){
+                    while(blackList.contains(position + "")){
+                        newX ++;
+                        rank ++;
+                        position++;
+                        if (newX > 3){
+                            newY++;
+                            newX = 0;
+
+                        }
+                    }
+                }
+
+
+                if (info.cellX != newX || info.cellY != newY || info.rank != rank) {
+                    if (info.spanX == 1 && info.spanY == 1 & info.neadReoder ){
+                        info.cellX = newX;
+                        info.cellY = newY;
+                        info.rank = rank;
+
+                        if (animateChildToPosition(v, info.cellX, info.cellY, REORDER_ANIMATION_DURATION, 0, true, true)){
+                            Log.d("txk", "info.title=" + info.title + "; info.cellX=" + info.cellX + "; info.cellY=" + info.cellY + ";newX=" + newX + ";newY=" + newY);
+                            LauncherModel.modifyItemInDatabase(getContext(), info,
+                                    info.container, info.screenId, info.cellX, info.cellY, info.spanX, info.spanY);
+                        }
+                    } else {
+                        rank --;
+                        position --;
+                    }
+
+                }
+
+            }
+            rank ++;
+            position++;
+        }
+    }
+
+    public void rearrangeHomePage(){
+        ArrayList<View> list = new ArrayList<View>();
+        ArrayList<String> blackList = new ArrayList<String>();
+        int neadReoderSize = 20 - getShortcutsAndWidgets().getChildCount();
+        for (int i=0; i<getShortcutsAndWidgets().getChildCount(); i++){
+            View tempView = getShortcutsAndWidgets().getChildAt(i);
+            list.add(tempView);
+            ItemInfo info = (ItemInfo) tempView.getTag();
+            if (info.spanX > 1 || info.spanY > 1){
+                neadReoderSize ++;
+                for (int y=info.cellY; y<info.cellY+info.spanY; y++){
+                    for (int x=info.cellX; x<info.cellX+info.spanX; x++){
+                        int a = x + y*4;
+                        blackList.add(a + "");
+                        if (a > neadReoderSize) {
+                            neadReoderSize --;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        for (int i=0; i<list.size(); i++){
+            ItemInfo info = (ItemInfo) list.get(i).getTag();
+            if (info.spanX > 1 || info.spanY > 1){
+            } else {
+                int oldPosition = info.cellX + info.cellY*4;
+                if (oldPosition > neadReoderSize ) {
+                    blackList.add(oldPosition + "");
+                    info.neadReoder = false;
+                } else {
+                    info.neadReoder = true;
+                }
+            }
+
+        }
+//    	getShortcutsAndWidgets().removeAllViews();
+        InvariantDeviceProfile grid = LauncherAppState.getInstance().getInvariantDeviceProfile();
+        int position = grid.numRows * grid.numColumns - 1;
+        int newX, newY, rank;
+        rank = grid.numRows * grid.numColumns - 1;
+
+        for (int i=0; i<list.size(); i++){
+            View v = list.get(i);
+            if (v != null){
+//        		CellLayout.LayoutParams lp = (CellLayout.LayoutParams) v.getLayoutParams();
+                newX = position % grid.numColumns;
+                newY = position / grid.numColumns;
+                ItemInfo info = (ItemInfo) v.getTag();
+
+                if (blackList != null){
+                    while(blackList.contains(position + "")){
+                        newX --;
+                        rank --;
+                        position --;
+                        if (newX < 0 ){
+                            newY--;
+                            newX = 3;
+
+                        }
+                    }
+                }
+
+                if (info.cellX != newX || info.cellY != newY || info.rank != rank) {
+
+                    if (info.spanX == 1 && info.spanY == 1 & info.neadReoder ){
+                        info.cellX = newX;
+                        info.cellY = newY;
+                        info.rank = rank;
+                        if (animateChildToPosition(v, info.cellX, info.cellY, REORDER_ANIMATION_DURATION, 0, true, true)){
+                            LauncherModel.modifyItemInDatabase(getContext(), info,
+                                    info.container, info.screenId, info.cellX, info.cellY, info.spanX, info.spanY);
+                        }
+                    } else {
+                        rank ++;
+                        position ++;
+                    }
+                }
+            }
+            rank --;
+            position--;
+        }
+    }
+
 }

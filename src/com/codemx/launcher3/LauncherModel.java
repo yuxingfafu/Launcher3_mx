@@ -86,8 +86,8 @@ import java.util.Set;
  */
 public class LauncherModel extends BroadcastReceiver
         implements LauncherAppsCompat.OnAppsChangedCallbackCompat {
-    static final boolean DEBUG_LOADERS = false;
-    private static final boolean DEBUG_RECEIVER = false;
+    static final boolean DEBUG_LOADERS = true;
+    private static final boolean DEBUG_RECEIVER = true;
     private static final boolean REMOVE_UNRESTORED_ICONS = true;
 
     static final String TAG = "Launcher.Model";
@@ -98,6 +98,7 @@ public class LauncherModel extends BroadcastReceiver
 
     private static final int ITEMS_CHUNK = 6; // batch size for the workspace icons
     private static final long INVALID_SCREEN_ID = -1L;
+
 
     @Thunk
     final boolean mAppsCanBeOnRemoveableStorage;
@@ -1611,9 +1612,14 @@ public class LauncherModel extends BroadcastReceiver
 
                 waitForIdle();
 
+
                 // second step
                 if (DEBUG_LOADERS) Log.d(TAG, "step 2: loading all apps");
                 loadAndBindAllApps();
+
+                if (LauncherAppState.isDisableAllApps()) {
+                    verifyApplications();
+                }
             }
 
             // Clear out this reference, otherwise we end up holding it until all of the
@@ -1666,7 +1672,29 @@ public class LauncherModel extends BroadcastReceiver
                 return callbacks;
             }
         }
+        private void verifyApplications() {
+            final Context context = mApp.getContext();
 
+            // Cross reference all the applications in our apps list with items in the workspace
+            ArrayList<ItemInfo> tmpInfos;
+            ArrayList<ItemInfo> added = new ArrayList<ItemInfo>();
+            synchronized (sBgLock) {
+                for (AppInfo app : mBgAllAppsList.data) {
+                    tmpInfos = getItemInfoForComponentName(app.componentName, app.user);
+                    if (tmpInfos.isEmpty()) {
+                        // We are missing an application icon, so add this to the workspace
+                        added.add(app);
+                        // This is a rare event, so lets log it
+                        Log.e(TAG, "Missing Application on load: " + app);
+                    }
+                }
+            }
+            if (!added.isEmpty()) {
+                addAndBindAddedWorkspaceItems(context, added);//7.0 虽然去掉了去抽屉的代码，但留了这个方法给我们。
+            }
+
+
+        }
         // check & update map of what's occupied; used to discard overlapping/invalid items
         private boolean checkItemPlacement(LongArrayMap<ItemInfo[][]> occupied, ItemInfo item,
                                            ArrayList<Long> workspaceScreens) {
@@ -1830,7 +1858,7 @@ public class LauncherModel extends BroadcastReceiver
                 // Make sure the default workspace is loaded
                 Launcher.addDumpLog(TAG, "loadWorkspace: loading default favorites", false);
                 // 解析xml中的默认桌面图标配置，并且保存到数据库中
-                LauncherAppState.getLauncherProvider().loadDefaultFavoritesIfNecessary();
+//                LauncherAppState.getLauncherProvider().loadDefaultFavoritesIfNecessary();
             }
 
             synchronized (sBgLock) {
@@ -2830,9 +2858,9 @@ public class LauncherModel extends BroadcastReceiver
             }
 
             // shallow copy
-            @SuppressWarnings("unchecked")
             final ArrayList<AppInfo> list
                     = (ArrayList<AppInfo>) mBgAllAppsList.data.clone();
+
             final WidgetsModel widgetList = mBgWidgetsModel.clone();
             Runnable r = new Runnable() {
                 public void run() {
@@ -3156,7 +3184,14 @@ public class LauncherModel extends BroadcastReceiver
                     new HashMap<ComponentName, AppInfo>();
 
             if (added != null) {
-                addAppsToAllApps(context, added);
+//                addAppsToAllApps(context, added);
+                if(LauncherAppState.isDisableAllApps()){
+                    final ArrayList<ItemInfo> addedInfos = new ArrayList<ItemInfo>(added);
+                    addAndBindAddedWorkspaceItems(context, addedInfos);
+                }else{
+                    addAppsToAllApps(context, added);
+                }
+
                 for (AppInfo ai : added) {
                     addedOrUpdatedApps.put(ai.componentName, ai);
                 }
